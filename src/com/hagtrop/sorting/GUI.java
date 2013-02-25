@@ -4,6 +4,8 @@ import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import javax.swing.*;
 
 public class GUI extends JFrame{
@@ -142,7 +144,15 @@ public class GUI extends JFrame{
         }
     }
     private void startBtnActionPerformed(){
-        
+        try{
+            ArrayList<Integer> array = MyFileReader.getArray(sourceFile);
+            for(Integer n : array){
+                System.out.print(n + " ");
+            }
+        }
+        catch(IOException e){
+            System.err.println(e);
+        }
     }
     
 }
