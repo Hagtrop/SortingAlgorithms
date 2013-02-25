@@ -149,6 +149,13 @@ public class GUI extends JFrame{
             for(Integer n : array){
                 System.out.print(n + " ");
             }
+            System.out.println();
+            
+            Bubble.sort(array);
+            
+            for(Integer n : array){
+                System.out.print(n + " ");
+            }
         }
         catch(IOException e){
             System.err.println(e);
