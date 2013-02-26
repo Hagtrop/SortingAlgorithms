@@ -151,7 +151,7 @@ public class GUI extends JFrame{
             }
             System.out.println();
             
-            Bubble.sort(array);
+            SelectionSort.unidir(array);
             
             for(Integer n : array){
                 System.out.print(n + " ");

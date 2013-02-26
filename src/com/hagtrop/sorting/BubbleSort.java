@@ -2,7 +2,7 @@ package com.hagtrop.sorting;
 
 import java.util.ArrayList;
 
-public class Bubble {
+public class BubbleSort {
     static void sort(ArrayList<Integer> array){
         boolean sorted = false;
         int size = array.size();
