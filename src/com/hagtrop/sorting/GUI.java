@@ -14,7 +14,7 @@ public class GUI extends JFrame{
     private File sourceFile;
     private String inputFileName, outputFileName;
     private JLabel inputLbl, outputLbl;
-    private JRadioButton rb1, rb2, rb3, rb4, rb5, rb6;
+    private JRadioButton rb1, rb2, rb3, rb4, rb5, rb6, rb7;
     public static void main(String args[]){
         new GUI();
     }
@@ -87,16 +87,18 @@ public class GUI extends JFrame{
         ButtonGroup group = new ButtonGroup();
         rb1 = new JRadioButton("Сортировка методом Пузырька");
         group.add(rb1);
-        rb2 = new JRadioButton("Сортировка выборкой");
+        rb2 = new JRadioButton("Сортировка одннапраленным выбором");
         group.add(rb2);
-        rb3 = new JRadioButton("Сортировка вставками");
+        rb3 = new JRadioButton("Сортировка двунаправленным выбором");
         group.add(rb3);
-        rb4 = new JRadioButton("Сортировка слиянием");
+        rb4 = new JRadioButton("Сортировка вставками");
         group.add(rb4);
-        rb5 = new JRadioButton("Сортировка Шелла");
+        rb5 = new JRadioButton("Сортировка слиянием");
         group.add(rb5);
-        rb6 = new JRadioButton("Быстрая сортировка");
+        rb6 = new JRadioButton("Сортировка Шелла");
         group.add(rb6);
+        rb7= new JRadioButton("Быстрая сортировка");
+        group.add(rb7);
         
         box.add(rb1);
         box.add(rb2);
@@ -104,6 +106,7 @@ public class GUI extends JFrame{
         box.add(rb4);
         box.add(rb5);
         box.add(rb6);
+        box.add(rb7);
         
         return box;
     }
@@ -146,16 +149,34 @@ public class GUI extends JFrame{
     private void startBtnActionPerformed(){
         try{
             ArrayList<Integer> array = MyFileReader.getArray(sourceFile);
+            System.out.println("Before sorting:");
             for(Integer n : array){
                 System.out.print(n + " ");
             }
             System.out.println();
             
-            SelectionSort.unidir(array);
+            long startTime = System.currentTimeMillis();
+            if(rb1.isSelected()){
+                BubbleSort.sort(array);
+            }
+            else if(rb2.isSelected()){
+                SelectionSort.unidir(array);
+            }
+            else if(rb3.isSelected()){
+                SelectionSort.bidir(array);
+            }
+            else if(rb4.isSelected()){
+                InsertionSort.sort(array);
+            }
             
+            long totalTime = System.currentTimeMillis() - startTime;
+            
+            System.out.println("After sorting:");
             for(Integer n : array){
                 System.out.print(n + " ");
             }
+            System.out.println();
+            System.out.println("Time: " + totalTime + "ms");
         }
         catch(IOException e){
             System.err.println(e);
