@@ -168,6 +168,9 @@ public class GUI extends JFrame{
             else if(rb4.isSelected()){
                 InsertionSort.sort(array);
             }
+            else if(rb6.isSelected()){
+                ShellSort.sort(array);
+            }
             
             long totalTime = System.currentTimeMillis() - startTime;
             
