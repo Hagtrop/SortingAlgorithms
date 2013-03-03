@@ -4,6 +4,7 @@ import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -11,10 +12,10 @@ import javax.swing.*;
 public class GUI extends JFrame{
     private JButton fileBtn, startBtn;
     private JTextField fileField, resultField;
-    private File sourceFile;
+    private File sourceFile, outputFile;
     private String inputFileName, outputFileName;
     private JLabel inputLbl, outputLbl;
-    private JRadioButton rb1, rb2, rb3, rb4, rb5, rb6, rb7;
+    private JRadioButton rb1, rb2, rb3, rb4, rb5, rb6;
     public static void main(String args[]){
         new GUI();
     }
@@ -58,8 +59,9 @@ public class GUI extends JFrame{
     private Box fileChooseBox(){
         //Создаём горизонтальный Box с полем и кнопкой
         Box box = Box.createHorizontalBox();
-        fileField = new JTextField("Выбор файла", 15);
+        fileField = new JTextField("Выбор файла", 18);
         fileField.setMaximumSize(fileField.getPreferredSize());
+        fileField.setEditable(false);
         fileBtn = new JButton("File");
         fileBtn.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
@@ -93,12 +95,10 @@ public class GUI extends JFrame{
         group.add(rb3);
         rb4 = new JRadioButton("Сортировка вставками");
         group.add(rb4);
-        rb5 = new JRadioButton("Сортировка слиянием");
+        rb5 = new JRadioButton("Сортировка Шелла");
         group.add(rb5);
-        rb6 = new JRadioButton("Сортировка Шелла");
+        rb6= new JRadioButton("Быстрая сортировка");
         group.add(rb6);
-        rb7= new JRadioButton("Быстрая сортировка");
-        group.add(rb7);
         
         box.add(rb1);
         box.add(rb2);
@@ -106,7 +106,6 @@ public class GUI extends JFrame{
         box.add(rb4);
         box.add(rb5);
         box.add(rb6);
-        box.add(rb7);
         
         return box;
     }
@@ -121,6 +120,7 @@ public class GUI extends JFrame{
         });
         resultField = new JTextField(8);
         resultField.setMaximumSize(resultField.getPreferredSize());
+        resultField.setEditable(false);
         box.add(startBtn);
         box.add(resultField);
         return box;
@@ -138,23 +138,17 @@ public class GUI extends JFrame{
                 StringBuilder sb = new StringBuilder(inputFileName);
                 sb.insert(pos, "_sorted");
                 outputFileName = sb.toString();
-                //outputFileName = inputFileName.substring(0,pos) + "_sorted" + 
             }
             else{
                 outputFileName = inputFileName + "_sorted";
             }
             outputLbl.setText("Output: " + outputFileName);
+            outputFile = new File(sourceFile.getParent() + "\\" + outputFileName);
         }
     }
     private void startBtnActionPerformed(){
         try{
-            ArrayList<Integer> array = MyFileReader.getArray(sourceFile);
-            System.out.println("Before sorting:");
-            for(Integer n : array){
-                System.out.print(n + " ");
-            }
-            System.out.println();
-            
+            ArrayList<Integer> array = MyFileReader.getArray(sourceFile);         
             long startTime = System.currentTimeMillis();
             if(rb1.isSelected()){
                 BubbleSort.sort(array);
@@ -168,18 +162,25 @@ public class GUI extends JFrame{
             else if(rb4.isSelected()){
                 InsertionSort.sort(array);
             }
-            else if(rb6.isSelected()){
+            else if(rb5.isSelected()){
                 ShellSort.sort(array);
             }
-            
-            long totalTime = System.currentTimeMillis() - startTime;
-            
-            System.out.println("After sorting:");
-            for(Integer n : array){
-                System.out.print(n + " ");
+            else if(rb6.isSelected()){
+                QuikSort.sort(array, 0, array.size()-1);
             }
-            System.out.println();
-            System.out.println("Time: " + totalTime + "ms");
+            long totalTime = System.currentTimeMillis() - startTime;
+            resultField.setText(totalTime+" ms");
+            if(Test.arraySorted(array)){
+                System.out.println("Массив отсортирован успешно");
+            }
+            else{
+                System.out.println("Массив отсортирован неверно");
+            }
+            FileWriter writer = new FileWriter(outputFile);
+            for(Integer n : array){
+                writer.write(n + " ");
+            }
+            writer.close();
         }
         catch(IOException e){
             System.err.println(e);
